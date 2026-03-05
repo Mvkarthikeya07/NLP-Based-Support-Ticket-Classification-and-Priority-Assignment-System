@@ -139,7 +139,7 @@ The dataset was programmatically generated to simulate real-world customer suppo
 This hybrid approach combines **ML intelligence with business rules**, mirroring real enterprise systems.
 
 ---
-
+```
 ## 🖥️ Application Features
 
 ✔ Real-time ticket classification
@@ -148,7 +148,7 @@ This hybrid approach combines **ML intelligence with business rules**, mirroring
 ✔ Large-scale dataset usage
 ✔ Production-style ML deployment
 ✔ Internship-compliant structure
-
+````
 ---
 
 ## 📷 Application Screenshots
