@@ -1,278 +1,248 @@
- # 🎫 NLP-Based Support Ticket Classification and Priority Assignment System
+<div align="center">
 
-![Future Interns](https://img.shields.io/badge/Future%20Interns-Machine%20Learning-blue)
-![Task](https://img.shields.io/badge/Task-2-success)
-![Status](https://img.shields.io/badge/Status-Completed-brightgreen)
+<h1>🎫 Support Ticket Classifier</h1>
 
-## Internship: Machine Learning Intern – Future Interns
+<p><strong>An end-to-end NLP pipeline that reads a raw customer support ticket,<br>understands its intent, and returns a category + urgency level in real time.</strong></p>
 
-**Task Number:** Task 2 (Support Ticket Classification)
-**Track Code:** ML
-**Recommended Repository Name:** `FUTURE_ML_02`
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-2.3.3-black?style=flat-square&logo=flask)](https://flask.palletsprojects.com)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-1.3.2-F7931E?style=flat-square&logo=scikit-learn&logoColor=white)](https://scikit-learn.org)
+[![NLTK](https://img.shields.io/badge/NLTK-3.8.1-154f3c?style=flat-square)](https://nltk.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-22c55e?style=flat-square)](./LICENSE)
 
----
+<br>
 
-## ✅ Official Task-2 Requirement Compliance
+> *"Payment failed but money deducted"*
+> → **Billing** · 🔴 **High Priority**
+>
+> *"How do I upgrade my plan?"*
+> → **General** · 🟢 **Low Priority**
 
-This project is developed **strictly according to the official Task-2 guidelines** provided by **Future Interns** and satisfies **all mandatory requirements**.
+In under a second. No human in the loop.
 
-| Task-2 Requirement                     | Status      | Implementation                              |
-| -------------------------------------- | ----------- | ------------------------------------------- |
-| Text cleaning & tokenization           | ✅ Completed | Regex cleaning, lowercasing, NLTK stopwords |
-| Ticket category classification         | ✅ Completed | TF-IDF + Logistic Regression                |
-| Priority tagging (High / Medium / Low) | ✅ Completed | Rule-based priority engine                  |
-| Model performance evaluation           | ✅ Completed | Accuracy evaluation during training         |
-| Tools: Python, NLTK, Scikit-learn      | ✅ Used      | Fully compliant                             |
-| Deliverable: Working system            | ✅ Delivered | Flask-based web application                 |
-
-📌 **Verdict:** This submission is **100% compliant with Task-2 expectations**.
+</div>
 
 ---
 
-## 📌 Project Overview
+## The Problem This Solves
 
-Customer support teams receive hundreds or thousands of tickets daily, making manual categorization and prioritization inefficient and error-prone. This project addresses that challenge by building an **NLP-powered Support Ticket Classification System** that:
+Every support team faces the same bottleneck: a flood of unstructured tickets, no automatic routing, and critical issues buried under low-urgency noise.
 
-* Automatically classifies incoming support tickets
-* Assigns urgency-based priority levels
-* Presents results through a professional, enterprise-style web interface
-
-The system enables support teams to **respond faster, route tickets intelligently, and improve customer satisfaction**.
+This system eliminates that bottleneck. Paste a ticket — get the category and urgency back instantly. The right ticket reaches the right team at the right time.
 
 ---
 
-## 🎯 Problem Statement
+## How It Actually Works
 
-Manual handling of customer support tickets often leads to:
+### Stage 1 — Text Cleaning (`clean_text` in `app.py` + `train_model.py`)
 
-* ❌ Delayed responses
-* ❌ Poor prioritization of critical issues
-* ❌ Increased customer dissatisfaction
+Every ticket goes through an identical preprocessing function at both training and inference time:
 
-This project leverages **Natural Language Processing and Machine Learning** to automate ticket understanding and urgency assessment in real time.
-
----
-
-## 🧠 Solution Approach
-
-The project follows a production-style machine learning workflow:
-
-1. Generate a large-scale dataset of realistic support tickets (10,000+)
-2. Perform text preprocessing and feature extraction
-3. Train a supervised ML classifier for ticket categorization
-4. Assign priority using rule-based logic layered over ML predictions
-5. Deploy the system as a Flask web application
-6. Present results using a clean, professional UI
-
----
-
-## 🏗️ System Architecture
-
-```
-User Ticket Input
-        ↓
-Text Cleaning & Tokenization (NLP)
-        ↓
-TF-IDF Vectorization
-        ↓
-Ticket Classification (ML Model)
-        ↓
-Priority Assignment (Rule-Based Logic)
-        ↓
-Flask Backend
-        ↓
-Enterprise Web Interface
+```python
+def clean_text(text):
+    text = text.lower()                          # normalize case
+    text = re.sub(r"[^a-z ]", "", text)          # strip digits, punctuation, symbols
+    return " ".join(                             # remove NLTK English stopwords
+        w for w in text.split() if w not in stop_words
+    )
 ```
 
----
+`"Payment FAILED! Money deducted??"`  →  `"payment failed money deducted"`
 
-## 🛠️ Technologies Used
-
-### Programming & Backend
-
-* Python
-* Flask
-
-### NLP & Machine Learning
-
-* NLTK
-* Scikit-learn (TF-IDF, Logistic Regression)
-
-### Frontend
-
-* HTML
-* CSS (Enterprise SaaS-style UI)
+The same function runs in `train_model.py` during training and in `app.py` at prediction time — guaranteeing zero train/serve skew.
 
 ---
 
-## 📂 Dataset Description
+### Stage 2 — TF-IDF Vectorization
 
-* **Dataset Size:** 10,000+ support tickets
-* **Categories:** Technical, Billing, Account, General
-* **Dataset Type:** Synthetic but business-realistic
-* **Purpose:** Training and evaluating ticket classification model
-
-The dataset was programmatically generated to simulate real-world customer support traffic.
-
----
-
-## 🤖 Machine Learning Model
-
-* **Algorithm:** Logistic Regression
-* **Feature Extraction:** TF-IDF Vectorization
-* **Reason for Selection:**
-
-  * Fast training on large text datasets
-  * Interpretable and production-friendly
-  * Suitable for real-time classification
-
----
-
-## 🚦 Priority Assignment Logic
-
-| Priority | Criteria                                                 |
-| -------- | -------------------------------------------------------- |
-| High     | Service outage, payment failure, refund, critical errors |
-| Medium   | Partial issues, delays, billing inconsistencies          |
-| Low      | Informational queries, appreciation, general questions   |
-
-This hybrid approach combines **ML intelligence with business rules**, mirroring real enterprise systems.
-
----
-```
-## 🖥️ Application Features
-
-✔ Real-time ticket classification
-✔ Automated priority tagging
-✔ Enterprise-style web interface
-✔ Large-scale dataset usage
-✔ Production-style ML deployment
-✔ Internship-compliant structure
-````
----
-
-## 📷 Application Screenshots
-
-Screenshots are included in the repository under the `/screenshots/` directory:
-
-* Home Page – Ticket input interface
-<img width="1366" height="768" alt="Screenshot (130)" src="https://github.com/user-attachments/assets/0657a9d8-1cb8-499f-a026-c59a9884466e" />
-
-* Result Page – Billing ticket with High priority
-<img width="1366" height="768" alt="Screenshot (127)" src="https://github.com/user-attachments/assets/ca58547d-b5c1-4d50-b41d-a7fa624b2bc0" />
-
-* Result Page – Technical issue classification
-<img width="1366" height="768" alt="Screenshot (128)" src="https://github.com/user-attachments/assets/a4ce900e-32ec-449f-8fc7-2cb259f0e8f2" />
-
-* Result Page – Medium priority billing case
-<img width="1366" height="768" alt="Screenshot (129)" src="https://github.com/user-attachments/assets/8708646c-efc8-418e-860f-8998b942ae86" />
-
-(These screenshots are taken from the **actual running application**, not mockups.)
-
----
-
-## 🚀 How to Run the Project
-
-### 1️⃣ Install Dependencies
-
-```bash
-pip install -r requirements.txt
+```python
+vectorizer = TfidfVectorizer()
+X_vec = vectorizer.fit_transform(X)
 ```
 
-### 2️⃣ Generate Dataset
+Converts the cleaned text into a sparse numerical matrix. Words that appear frequently across all tickets (low discriminative power) are down-weighted. Rare, category-specific words (e.g. *refund*, *login*, *crashing*) are up-weighted.
 
-```bash
-python generate_dataset.py
+The fitted vectorizer is serialized to `model/vectorizer.pkl` and reloaded at app startup — never re-fit at inference time.
+
+---
+
+### Stage 3 — Logistic Regression Classifier
+
+```python
+model = LogisticRegression()
+model.fit(X_vec, y)
 ```
 
-### 3️⃣ Train Model
+Trained on 10,000 samples across 4 balanced classes. Logistic Regression was chosen deliberately over heavier models:
 
-```bash
-python train_model.py
+- Handles high-dimensional sparse TF-IDF matrices natively
+- Produces interpretable per-class probability scores
+- Extremely fast at inference (< 1ms per ticket)
+- No GPU required
+
+Serialized to `model/classifier.pkl`.
+
+---
+
+### Stage 4 — Priority Assignment Engine (`assign_priority` in `app.py`)
+
+After ML classification, a rule-based engine scans the **cleaned** ticket text for domain-critical keywords:
+
+```python
+def assign_priority(text):
+    if any(k in text for k in ["not working", "refund", "error", "failed"]):
+        return "High"
+    elif any(k in text for k in ["slow", "billing"]):
+        return "Medium"
+    return "Low"
 ```
 
-### 4️⃣ Run Application
+Priority runs on the **post-cleaned** text, so it works consistently regardless of input casing or punctuation.
 
-```bash
-python app.py
+| Priority | Trigger Keywords | Business Logic |
+|---|---|---|
+| 🔴 **High** | `not working` · `refund` · `error` · `failed` | Service down / money at risk |
+| 🟡 **Medium** | `slow` · `billing` | Degraded service / billing inquiry |
+| 🟢 **Low** | *(no match)* | Informational / general queries |
+
+---
+
+### Full System Flow
+
 ```
-
-Open in browser:
-
-```
-http://127.0.0.1:5000
+Raw Ticket (POST /  ←  HTML form)
+        │
+        ▼
+   clean_text()
+   ├─ lowercase
+   ├─ regex strip [^a-z ]
+   └─ stopword removal
+        │
+        ▼
+   vectorizer.transform()      ← loaded from model/vectorizer.pkl
+        │
+        ▼
+   model.predict()             ← loaded from model/classifier.pkl
+        │                               │
+        ▼                               ▼
+   category                       assign_priority()
+   [Technical · Billing ·         [High · Medium · Low]
+    Account · General]
+        │                               │
+        └───────────┬───────────────────┘
+                    ▼
+           render result.html
+           { ticket, category, priority }
 ```
 
 ---
 
-## 📁 Project Structure
+## Dataset Breakdown
+
+Generated by `generate_dataset.py` — **10,000 samples, 4 balanced classes**, random-sampled from domain-specific template pools:
+
+| Class | Templates in Pool | Sample Tickets |
+|---|---|---|
+| **Technical** | 6 | `"Internet is not working"` · `"Application keeps crashing"` · `"System timeout issue"` |
+| **Billing** | 5 | `"Charged twice for subscription"` · `"Payment failed but money deducted"` · `"Invoice not generated"` |
+| **Account** | 5 | `"Password reset not working"` · `"Account locked"` · `"Email verification failed"` |
+| **General** | 5 | `"How to upgrade my plan?"` · `"Is customer support available 24/7?"` |
+
+Each run generates a fresh `data/tickets.csv`. The random seed is not fixed, so distributions vary slightly — re-training after regeneration is recommended.
+
+---
+
+## Application Screenshots
+
+**Home — Ticket Input Interface**
+<img width="1366" height="768" alt="Home Page" src="https://github.com/user-attachments/assets/0657a9d8-1cb8-499f-a026-c59a9884466e" />
+
+**Result — Billing · High Priority**
+<img width="1366" height="768" alt="Billing High" src="https://github.com/user-attachments/assets/ca58547d-b5c1-4d50-b41d-a7fa624b2bc0" />
+
+**Result — Technical Issue Classification**
+<img width="1366" height="768" alt="Technical" src="https://github.com/user-attachments/assets/a4ce900e-32ec-449f-8fc7-2cb259f0e8f2" />
+
+**Result — Billing · Medium Priority**
+<img width="1366" height="768" alt="Billing Medium" src="https://github.com/user-attachments/assets/8708646c-efc8-418e-860f-8998b942ae86" />
+
+---
+
+## Project Structure
 
 ```
-support_ticket_classifier/
+support-ticket-classifier/
 │
-├── generate_dataset.py
-├── train_model.py
-├── app.py
+├── app.py                  # Flask server — inference pipeline + routing
+├── train_model.py          # Data loading, TF-IDF, LR training, serialization
+├── generate_dataset.py     # Synthetic 10k dataset generator
+├── requirements.txt        # Pinned dependencies
 │
 ├── data/
-│   └── tickets.csv
+│   └── tickets.csv         # Generated training corpus
 │
 ├── model/
-│   ├── classifier.pkl
-│   └── vectorizer.pkl
+│   ├── classifier.pkl      # Serialized LogisticRegression
+│   └── vectorizer.pkl      # Serialized TfidfVectorizer
 │
 ├── templates/
-│   ├── index.html
-│   └── result.html
+│   ├── index.html          # Ticket input form
+│   └── result.html         # Prediction result display
 │
-├── static/
-│   └── style.css
-│
-├── requirements.txt
-└── README.md
+└── static/
+    └── style.css           # Enterprise UI styles
 ```
 
 ---
 
-## 🎓 Internship Context
+## Quickstart
 
-* **Organization:** Future Interns
-* **Internship Track:** Machine Learning
-* **Task Completed:** Task-2 – Support Ticket Classification
-* **Internship Model:** Self-directed, task-based
-* **Evaluation:** Project submission & review
+```bash
+# Clone
+git clone https://github.com/mv-karthikeya/support-ticket-classifier.git
+cd support-ticket-classifier
 
-This project adheres to all internship guidelines regarding domain scope, tooling, and documentation.
+# Install dependencies
+pip install -r requirements.txt
 
----
+# Generate dataset
+python generate_dataset.py
+# ✅ Dataset created successfully at data/tickets.csv
 
-## 💼 Resume-Ready Description
+# Train model (creates model/ directory outputs)
+mkdir -p model
+python train_model.py
+# ✅ Model trained and saved successfully
 
-> Designed and deployed an NLP-based Support Ticket Classification system using TF-IDF and Logistic Regression. The system automatically categorizes customer issues and assigns priority levels using rule-based logic, delivered through a professional Flask web application trained on a large-scale dataset.
-
----
-
-## 🔮 Future Enhancements
-
-* Admin analytics dashboard
-* SLA-based ticket routing
-* Deep learning models (BERT)
-* Cloud deployment
-
----
-
-## 🏁 Final Statement
-
-✔ Fully satisfies **Future Interns – Task 2** requirements
-✔ Production-style ML system
-✔ Strong portfolio & internship submission
+# Launch
+python app.py
+# Running on http://127.0.0.1:5000
+```
 
 ---
 
-📜 License
+## Dependencies
 
-This project is released under the MIT License and is intended strictly for academic and educational purposes.
+| Package | Version | Role |
+|---|---|---|
+| `flask` | 2.3.3 | Web server and routing |
+| `scikit-learn` | 1.3.2 | TF-IDF vectorization + Logistic Regression |
+| `nltk` | 3.8.1 | English stopword corpus |
+| `pandas` | 2.1.4 | Dataset I/O (`tickets.csv`) |
 
 ---
 
-👨‍💻 **Developed by:** M V Karthikeya
+## Roadmap
+
+- [ ] Replace keyword priority engine with a second trained classifier
+- [ ] Expose `POST /api/classify` JSON endpoint for external integrations
+- [ ] Add per-prediction confidence score to result page
+- [ ] Fix random seed in `generate_dataset.py` for reproducible training
+- [ ] Fine-tune on BERT embeddings for semantic understanding
+- [ ] Dockerfile for containerized deployment
+
+---
+
+## License
+
+MIT © 2026 [M V Karthikeya](https://github.com/mv-karthikeya)
